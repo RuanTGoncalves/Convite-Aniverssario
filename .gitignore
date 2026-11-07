@@ -1,0 +1,12 @@
+# fotos pessoais de referência — não vão pro repositório público
+WhatsApp Image*.jpeg
+WhatsApp Image*.jpg
+*.ref.jpg
+
+# config local do editor / servidor de preview
+.claude/
+
+# sistema
+Thumbs.db
+desktop.ini
+.DS_Store

@@ -1,0 +1,1053 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A Porta Remendada — Churrasco de 25 anos</title>
+<meta name="description" content="Convite para o churrasco de 25 anos. Quebre a porta, confirme presença e escolha o que vai levar.">
+<meta name="theme-color" content="#140d0a">
+<meta property="og:title" content="A Porta Remendada">
+<meta property="og:description" content="Churrasco de 25 anos — dia 15, 13h. Se a porta aguentar.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   A PORTA REMENDADA
+   Layout: coluna única (phone-first ~460px) em três atos —
+   porta interativa › revelação no quintal › confirmação.
+   Tema único e deliberado: noite de churrasco (madeira, brasa, fumaça).
+   ============================================================ */
+:root{
+  --bg:#140d0a;
+  --bg-glow:#3a2012;
+  --panel:#231712;
+  --panel-2:#1a110d;
+  --wood:#6b4226;
+  --wood-dark:#3a2416;
+  --fg:#f4e9da;
+  --fg-dim:#bfa892;
+  --accent:#ff7a3c;
+  --ember:#c23b2f;
+  --gold:#e8b74c;
+  --ok:#7fb86b;
+  --warn:#e8b74c;
+  --bad:#c0564a;
+  --font-display:"Churrasco Pixel", "Courier New", monospace;
+  --font-body:"Nunito", system-ui, -apple-system, Segoe UI, sans-serif;
+  color-scheme: dark;
+}
+
+@font-face{
+  font-family:"Churrasco Pixel";
+  src:url("assets/ui/fonte_churrasco_pixel.ttf") format("truetype");
+  font-display:swap;
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;background:var(--bg);}
+body{
+  font-family:var(--font-body);
+  color:var(--fg);
+  background:
+    radial-gradient(ellipse 120% 60% at 50% -5%, var(--bg-glow) 0%, transparent 65%),
+    var(--bg);
+  min-height:100%;
+  overflow-x:hidden;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  -webkit-text-size-adjust:100%;
+}
+img{max-width:100%; display:block; image-rendering:pixelated; image-rendering:crisp-edges;}
+[hidden]{display:none !important;}
+
+h1,h2,h3{margin:0; text-wrap:balance; line-height:1.35;}
+h1{font-size:clamp(23px,6.4vw,32px); font-weight:900; color:var(--gold); text-shadow:0 2px 0 #000;}
+h2{font-size:clamp(18px,5vw,23px); font-weight:900; color:var(--accent);}
+h3{font-size:15px; font-weight:800; color:var(--fg);}
+p{margin:0; line-height:1.6; color:var(--fg-dim);}
+small{color:var(--fg-dim);}
+
+.wrap{
+  width:100%; max-width:470px; margin-inline:auto;
+  padding-left:max(18px, env(safe-area-inset-left,0px));
+  padding-right:max(18px, env(safe-area-inset-right,0px));
+}
+.stack{display:flex; flex-direction:column; gap:14px;}
+.stack-lg{display:flex; flex-direction:column; gap:26px;}
+.center{text-align:center;}
+.eyebrow{
+  font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--accent); font-weight:800;
+}
+
+.card{
+  background:linear-gradient(180deg, var(--panel), var(--panel-2));
+  border:2px solid var(--wood);
+  border-radius:14px;
+  padding:18px;
+  box-shadow:0 4px 0 #0008, inset 0 1px 0 #ffffff0d;
+}
+
+/* ---- botões ---- */
+.btn{
+  font-family:var(--font-body);
+  font-size:15px; font-weight:900; letter-spacing:.01em;
+  color:var(--fg);
+  background:linear-gradient(180deg,#7c4d2c,#5a3620);
+  border:2px solid var(--wood-dark);
+  border-radius:11px;
+  padding:14px 18px;
+  min-height:48px;
+  cursor:pointer;
+  box-shadow:0 4px 0 var(--wood-dark);
+  transition:transform .09s ease, box-shadow .09s ease, filter .15s ease;
+  text-align:center; text-decoration:none;
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+}
+.btn:hover{filter:brightness(1.08);}
+.btn:active{transform:translateY(3px); box-shadow:0 1px 0 var(--wood-dark);}
+.btn:focus-visible{outline:3px solid var(--gold); outline-offset:3px;}
+.btn[disabled]{opacity:.45; cursor:not-allowed;}
+.btn-primary{
+  background:linear-gradient(180deg,#e8632d,#b63a22);
+  border-color:#6d1f10; box-shadow:0 4px 0 #6d1f10;
+}
+.btn-ghost{
+  background:#ffffff0a; border-color:#ffffff22; box-shadow:none;
+  color:var(--fg-dim); font-size:13px; padding:10px 14px; min-height:40px;
+}
+/* placa de madeira gerada, usada só onde a proporção bate (2:1) */
+.btn-plaque{
+  background:url("assets/ui/botao_rsvp.png") center/100% 100% no-repeat;
+  border:0; box-shadow:none; aspect-ratio:384/192; width:100%;
+  max-width:300px; margin-inline:auto; padding:0;
+  font-size:16px; text-shadow:0 2px 0 #0009;
+}
+.btn-plaque:active{transform:translateY(2px);}
+
+/* ============================================================
+   ATO 1 — A PORTA
+   ============================================================ */
+#ato-porta{
+  min-height:88svh;
+  display:flex; flex-direction:column; justify-content:center; gap:20px;
+  padding-block:30px 22px; position:relative;
+}
+
+#integridade{max-width:330px; width:100%; margin-inline:auto;}
+.integridade-top{
+  display:flex; justify-content:space-between; align-items:baseline;
+  font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--fg-dim); margin-bottom:6px; font-weight:800;
+}
+/* a fonte pixel gerada não tem acentos — por isso ela só entra
+   em números e rótulos ASCII, nunca em texto corrido em português */
+#integridade-pct{font-family:var(--font-display); font-size:13px; color:var(--fg); letter-spacing:.04em;}
+.barra{
+  height:16px; border:2px solid #000; border-radius:9px; overflow:hidden;
+  background:#120b08; box-shadow:inset 0 2px 5px #000a;
+}
+#integridade-fill{
+  height:100%; width:100%;
+  background:linear-gradient(180deg,#9fe08a,var(--ok));
+  transition:width .45s cubic-bezier(.3,1.4,.5,1), background .45s ease;
+}
+
+#palco{
+  position:relative; width:min(86vw, 330px); aspect-ratio:1/1;
+  margin-inline:auto; display:grid; place-items:center;
+  touch-action:manipulation;
+}
+#porta{
+  width:62%; grid-area:1/1; z-index:1;
+  filter:drop-shadow(0 12px 16px #000a);
+  transition:opacity .2s ease;
+}
+.barricada{
+  position:absolute; padding:0; border:0; background:none; cursor:pointer;
+  z-index:5; line-height:0;
+  filter:drop-shadow(0 6px 9px #000a);
+  transition:opacity .4s ease, transform .4s cubic-bezier(.4,-0.4,.7,.4);
+  -webkit-tap-highlight-color:transparent;
+}
+.barricada img{width:100%;}
+.barricada:hover{filter:drop-shadow(0 6px 9px #000a) brightness(1.12);}
+.barricada:active{transform:scale(.93) rotate(var(--r));}
+.barricada:focus-visible{outline:3px solid var(--gold); outline-offset:4px; border-radius:6px;}
+.barricada.quebrada{opacity:0; transform:scale(.35) rotate(calc(var(--r) + 30deg)); pointer-events:none;}
+
+#b-supino {top:-2%;  left:-4%;  width:56%; --r:-7deg;  transform:rotate(-7deg);}
+#b-cone   {top:4%;   right:-5%; width:45%; --r:9deg;   transform:rotate(9deg);}
+#b-fita   {top:34%;  left:9%;   width:76%; --r:-2deg;  transform:rotate(-2deg); z-index:6;}
+#b-tabuas {bottom:8%; left:-7%; width:54%; --r:6deg;   transform:rotate(6deg);}
+#b-cadeado{bottom:1%; right:-3%;width:43%; --r:-8deg;  transform:rotate(-8deg);}
+
+#vfx-camada{position:absolute; inset:0; pointer-events:none; z-index:9; display:grid; place-items:center;}
+#vfx-camada img{grid-area:1/1; opacity:0; transition:opacity .12s linear;}
+#vfx-impacto{width:62%;}
+#vfx-poeira{width:100%;}
+
+#porta-msg{
+  min-height:3.2em; font-weight:800; color:var(--gold);
+  font-size:clamp(14px,4vw,16px); text-wrap:balance;
+}
+#pular{align-self:center;}
+
+@keyframes tremer{
+  0%,100%{transform:translate3d(0,0,0);}
+  15%{transform:translate3d(-7px,3px,0) rotate(-1deg);}
+  30%{transform:translate3d(6px,-4px,0) rotate(1.2deg);}
+  45%{transform:translate3d(-5px,4px,0) rotate(-.8deg);}
+  60%{transform:translate3d(5px,-3px,0) rotate(.8deg);}
+  80%{transform:translate3d(-3px,2px,0) rotate(-.4deg);}
+}
+.tremer{animation:tremer .42s ease;}
+@keyframes surgir{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;}}
+.surgir{animation:surgir .5s ease both;}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important;}
+}
+
+/* ============================================================
+   ATO 2 — REVELAÇÃO
+   ============================================================ */
+#quintal{
+  position:relative; border-radius:14px; overflow:hidden;
+  border:3px solid var(--wood-dark); box-shadow:0 6px 0 #0009;
+  line-height:0;
+}
+#quintal-bg{width:100%;}
+#magnata{
+  position:absolute; left:50%; bottom:4%; width:19%;
+  transform:translateX(-50%);
+  cursor:pointer; background:none; border:0; padding:0;
+  filter:drop-shadow(0 4px 5px #000b);
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .12s ease;
+}
+#magnata:hover{transform:translateX(-50%) scale(1.06);}
+#magnata:focus-visible{outline:3px solid var(--gold); outline-offset:3px;}
+#fumaca{position:absolute; left:6%; top:14%; width:22%; opacity:0; pointer-events:none;}
+
+#balao{
+  position:absolute; top:5%; left:50%; transform:translateX(-50%);
+  width:max-content; max-width:86%;
+  background:var(--fg); color:#241610;
+  font-weight:800; font-size:clamp(11px,3.1vw,13.5px); line-height:1.4;
+  padding:9px 13px; border-radius:11px; box-shadow:0 3px 0 #0007;
+  text-align:center; z-index:3;
+}
+#balao::after{
+  content:""; position:absolute; bottom:-9px; left:50%; transform:translateX(-50%);
+  border:9px solid transparent; border-top-color:var(--fg); border-bottom:0;
+}
+
+#contagem{display:grid; grid-template-columns:repeat(4,1fr); gap:6px;}
+.cd-box{
+  background:#ffffff08; border:1px solid #ffffff14; border-radius:10px;
+  padding:10px 4px;
+}
+.cd-num{
+  font-family:var(--font-display);
+  font-size:clamp(19px,6vw,25px); color:var(--gold);
+  font-variant-numeric:tabular-nums; line-height:1.25; letter-spacing:.03em;
+}
+.cd-unit{
+  font-family:var(--font-display);
+  font-size:9px; letter-spacing:.1em; color:var(--fg-dim); margin-top:3px;
+}
+
+.linha{display:flex; gap:12px; align-items:flex-start;}
+.linha .ico{font-size:19px; line-height:1.35; flex:none; width:24px; text-align:center;}
+.linha b{color:var(--fg);}
+
+/* ============================================================
+   CONFIRMAÇÃO
+   ============================================================ */
+/* moldura de madeira gerada, fatiada pra não deformar nos cantos */
+.moldura{
+  border-style:solid;
+  border-width:22px;
+  border-image:url("assets/ui/moldura_painel.png") 58 fill repeat;
+  background-clip:padding-box;
+  padding:2px;
+}
+@media (min-width:430px){ .moldura{border-width:28px; padding:4px;} }
+.moldura > .moldura-inner{
+  background:linear-gradient(180deg,#201511f2,#17100cf2);
+  border-radius:8px; padding:18px;
+}
+
+.campo{display:flex; flex-direction:column; gap:6px;}
+.campo > span{font-size:12.5px; font-weight:800; color:var(--fg-dim); letter-spacing:.02em;}
+input[type=text], textarea{
+  font-family:var(--font-body); font-size:16px; color:var(--fg);
+  background:#15100d; border:2px solid var(--wood); border-radius:9px;
+  padding:12px; width:100%;
+}
+input[type=text]:focus, textarea:focus{outline:2px solid var(--gold); outline-offset:1px; border-color:var(--gold);}
+textarea{min-height:76px; resize:vertical;}
+
+.escolhas{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+.escolha{
+  font-family:var(--font-body); font-size:13px; font-weight:900; color:var(--fg-dim);
+  background:#ffffff08; border:2px solid #ffffff1a; border-radius:11px;
+  padding:12px 4px; cursor:pointer; min-height:62px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+  transition:all .15s ease;
+}
+.escolha .emoji{font-size:20px; line-height:1;}
+.escolha:focus-visible{outline:3px solid var(--gold); outline-offset:2px;}
+.escolha[aria-pressed="true"]{color:var(--fg); transform:translateY(-2px);}
+.escolha[data-status="sim"][aria-pressed="true"]{background:#7fb86b26; border-color:var(--ok); box-shadow:0 3px 0 #4d7a3e;}
+.escolha[data-status="talvez"][aria-pressed="true"]{background:#e8b74c26; border-color:var(--warn); box-shadow:0 3px 0 #937030;}
+.escolha[data-status="nao"][aria-pressed="true"]{background:#c0564a26; border-color:var(--bad); box-shadow:0 3px 0 #7a342c;}
+
+.check{display:flex; align-items:center; gap:10px; font-size:14px; color:var(--fg-dim); cursor:pointer; padding:4px 0;}
+.check input{width:20px; height:20px; accent-color:var(--accent); flex:none;}
+
+/* cards de acompanhamento */
+.itens{display:grid; grid-template-columns:repeat(3,1fr); gap:9px;}
+.item{
+  background:#ffffff08; border:2px solid #ffffff18; border-radius:12px;
+  padding:12px 6px 10px; cursor:pointer; display:flex; flex-direction:column;
+  align-items:center; gap:7px; transition:all .15s ease; min-height:104px; justify-content:center;
+}
+.item img{width:42px; height:42px;}
+.item span{font-size:12.5px; font-weight:800; color:var(--fg-dim);}
+.item:focus-visible{outline:3px solid var(--gold); outline-offset:2px;}
+.item[aria-pressed="true"]{
+  background:#ff7a3c1f; border-color:var(--accent); transform:translateY(-2px);
+  box-shadow:0 3px 0 #8d3d19;
+}
+.item[aria-pressed="true"] span{color:var(--fg);}
+
+#resumo{
+  background:#15100d; border:1px dashed var(--wood); border-radius:10px;
+  padding:13px; font-size:13.5px; line-height:1.65; color:var(--fg-dim);
+  white-space:pre-wrap; word-break:break-word;
+}
+#aviso-zap{font-size:12.5px; color:var(--warn);}
+
+/* ============================================================
+   PAINEL (só via #painel)
+   ============================================================ */
+#painel{display:none;}
+#painel:target, body.painel-on #painel{display:block;}
+.stats{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+.stat{background:#ffffff08; border:1px solid #ffffff14; border-radius:11px; padding:12px 6px; text-align:center;}
+.stat .n{font-family:var(--font-display); font-size:19px; color:var(--gold); font-variant-numeric:tabular-nums; line-height:1.3;}
+.stat .l{font-size:10px; text-transform:uppercase; letter-spacing:.1em; color:var(--fg-dim); font-weight:800;}
+#lista-convidados{display:flex; flex-direction:column; gap:7px; max-height:300px; overflow-y:auto;}
+.convidado{
+  display:flex; align-items:center; gap:10px; font-size:14px;
+  background:#ffffff08; border-radius:9px; padding:9px 11px;
+}
+.convidado input[type=checkbox]{width:20px; height:20px; accent-color:var(--ok); flex:none;}
+.convidado .nome{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.convidado.chegou .nome{opacity:.5; text-decoration:line-through;}
+.convidado button{
+  background:none; border:0; color:var(--fg-dim); cursor:pointer; font-size:17px;
+  padding:4px 6px; line-height:1; border-radius:6px;
+}
+.convidado button:hover{color:var(--bad);}
+.compras{display:flex; flex-direction:column; gap:6px; font-size:14px;}
+.compra{display:flex; justify-content:space-between; gap:12px; padding:7px 0; border-bottom:1px dashed #ffffff14;}
+.compra b{color:var(--gold); font-variant-numeric:tabular-nums;}
+
+footer{
+  text-align:center; padding-block:34px 44px; font-size:12px; color:#8a7566;
+}
+footer a{color:#a08977;}
+
+#som{
+  position:fixed; z-index:50;
+  bottom:calc(14px + env(safe-area-inset-bottom,0px));
+  right:calc(14px + env(safe-area-inset-right,0px));
+  width:44px; height:44px; min-height:44px; padding:0; font-size:17px; border-radius:50%;
+  background:#2a1b13ee; border-color:#00000080;
+  box-shadow:0 3px 10px #000a;
+  backdrop-filter:blur(4px);
+}
+#som:active{transform:translateY(2px); box-shadow:0 1px 6px #000a;}
+
+@media (min-width:620px){
+  .wrap{max-width:560px;}
+}
+</style>
+</head>
+<body>
+
+<button id="som" class="btn" type="button" aria-label="Ligar ou desligar o som" aria-pressed="false">🔇</button>
+
+<!-- ========================= ATO 1 — A PORTA ========================= -->
+<section id="ato-porta" class="wrap">
+  <div class="stack center">
+    <div class="eyebrow">você foi convidado pra algo</div>
+    <h1>Será que essa porta<br>aguenta?</h1>
+    <p>Tem coisa demais entupindo a entrada. Vai tirando — se você conseguir passar, tem churrasco do outro lado.</p>
+  </div>
+
+  <div id="integridade">
+    <div class="integridade-top">
+      <span>integridade da porta</span>
+      <span id="integridade-pct">100%</span>
+    </div>
+    <div class="barra"><div id="integridade-fill"></div></div>
+  </div>
+
+  <div id="palco">
+    <img id="porta" src="assets/porta/porta_completa.png" alt="Uma porta de madeira cheia de remendos, fita e pregos tortos">
+
+    <button class="barricada" id="b-supino" type="button"
+            data-msg="Supino de 120&nbsp;kg? Quebrou o banco junto."
+            aria-label="Tirar a barra de supino da frente da porta">
+      <img src="assets/barricadas/barricada_supino.png" alt="">
+    </button>
+    <button class="barricada" id="b-cone" type="button"
+            data-msg="Até o paciente fugiu dessa porta."
+            aria-label="Tirar o cone de cachorro da frente da porta">
+      <img src="assets/barricadas/barricada_cone.png" alt="">
+    </button>
+    <button class="barricada" id="b-fita" type="button"
+            data-msg="“Na minha máquina funcionava.”"
+            aria-label="Arrancar a fita de aviso da porta">
+      <img src="assets/barricadas/barricada_fita_bug.png" alt="">
+    </button>
+    <button class="barricada" id="b-tabuas" type="button"
+            data-msg="Pregou, quebrou, pregou de novo."
+            aria-label="Arrancar as tábuas pregadas na porta">
+      <img src="assets/barricadas/barricada_tabuas.png" alt="">
+    </button>
+    <button class="barricada" id="b-cadeado" type="button"
+            data-msg="Cadeado não encontrado. Erro 404."
+            aria-label="Arrancar o cadeado e a corrente">
+      <img src="assets/barricadas/barricada_cadeado.png" alt="">
+    </button>
+
+    <div id="vfx-camada" aria-hidden="true">
+      <img id="vfx-impacto" src="assets/vfx/impacto_farpas.gif" alt="">
+      <img id="vfx-poeira" src="assets/vfx/poeira_porta.gif" alt="">
+    </div>
+  </div>
+
+  <p id="porta-msg" class="center" role="status" aria-live="polite">Toque num entulho pra começar.</p>
+  <button id="pular" class="btn btn-ghost" type="button">pular introdução »</button>
+</section>
+
+<!-- ========================= ATO 2 — REVELAÇÃO ========================= -->
+<main id="convite" class="wrap stack-lg" hidden style="padding-bottom:10px;">
+
+  <section class="stack">
+    <div id="quintal">
+      <img id="quintal-bg" src="assets/cenario/quintal.png" alt="Quintal preparado pro churrasco: churrasqueira acesa, mesa posta, cooler e bandeirinhas ao pôr do sol">
+      <img id="fumaca" src="assets/vfx/fumaca_puff.gif" alt="">
+      <div id="balao">Opa! Calma, dessa vez eu não quebrei nada… na entrada, pelo menos.</div>
+      <button id="magnata" type="button" aria-label="Cutucar o aniversariante">
+        <img id="magnata-img" src="assets/personagem/animacoes/idle_respirando/frame_000.png" alt="O aniversariante, de terno e charuto, no quintal">
+      </button>
+    </div>
+    <p class="center" style="font-size:12.5px;">dica: cutuca ele algumas vezes</p>
+  </section>
+
+  <section class="card stack center">
+    <div class="eyebrow">25 anos</div>
+    <h2>Um churrasco com risco estrutural</h2>
+    <p>Eu faço 25 e, como todo mundo sabe, tudo que eu toco quebra. Vem comer carne e torcer pra cadeira aguentar.</p>
+    <div id="contagem" aria-label="Contagem regressiva para o churrasco"></div>
+  </section>
+
+  <section class="card stack">
+    <div class="linha"><span class="ico">📅</span><div><b>Dia 15</b>, a partir das <b>13h</b></div></div>
+    <div class="linha"><span class="ico">📍</span><div><b>Rua das Orquídeas</b><br>Condomínio Villaggio Jardins 3</div></div>
+    <div class="linha"><span class="ico">🥩</span><div>A <b>carne é por minha conta</b>. O resto é onde você entra (veja abaixo).</div></div>
+    <div class="linha"><span class="ico">🍺</span><div>Traz sua bebida e, se puder, <b>gelo</b>.</div></div>
+    <a id="maps" class="btn" href="#" target="_blank" rel="noopener">🗺️ Abrir no Maps</a>
+  </section>
+
+  <!-- ========================= CONFIRMAÇÃO ========================= -->
+  <section id="confirmar" class="stack">
+    <div class="center stack" style="gap:6px;">
+      <div class="eyebrow">lista oficial</div>
+      <h2>Você vai?</h2>
+      <p>Preciso saber quanta carne comprar — e se você vem acompanhado.</p>
+    </div>
+
+    <div class="moldura">
+      <div class="moldura-inner stack">
+
+        <label class="campo" for="nome">
+          <span>Seu nome</span>
+          <input type="text" id="nome" autocomplete="name" maxlength="60" placeholder="Como te chamo na lista?">
+        </label>
+
+        <div class="campo">
+          <span>Você vai?</span>
+          <div class="escolhas" role="group" aria-label="Sua resposta">
+            <button type="button" class="escolha" data-status="sim" aria-pressed="false">
+              <span class="emoji">🍖</span>Bora!
+            </button>
+            <button type="button" class="escolha" data-status="talvez" aria-pressed="false">
+              <span class="emoji">🤔</span>Talvez
+            </button>
+            <button type="button" class="escolha" data-status="nao" aria-pressed="false">
+              <span class="emoji">😢</span>Não vou
+            </button>
+          </div>
+        </div>
+
+        <div id="bloco-acompanhante" class="stack" hidden style="gap:10px;">
+          <label class="check">
+            <input type="checkbox" id="tem-acompanhante">
+            Vou levar alguém (namorado(a), +1)
+          </label>
+          <label class="campo" id="campo-acompanhante" for="nome-acompanhante" hidden>
+            <span>Nome de quem vem com você</span>
+            <input type="text" id="nome-acompanhante" maxlength="60" placeholder="Nome do(a) acompanhante">
+          </label>
+          <label class="check"><input type="checkbox" id="veg"> Sou vegetariano(a)</label>
+          <label class="check"><input type="checkbox" id="bebe"> Vou beber álcool</label>
+        </div>
+
+        <div id="bloco-itens" class="campo" hidden>
+          <span>Posso contar com você pra levar algo?</span>
+          <p style="font-size:12.5px; margin-bottom:2px;">Eu já quebrei liquidificador, fogão e um pedaço da minha dignidade tentando fazer arroz. Salva o churrasco:</p>
+          <div class="itens" role="group" aria-label="O que você leva">
+            <button type="button" class="item" data-item="Arroz" aria-pressed="false">
+              <img src="assets/icones/icone_arroz.png" alt=""><span>Arroz</span>
+            </button>
+            <button type="button" class="item" data-item="Vinagrete" aria-pressed="false">
+              <img src="assets/icones/icone_vinagrete.png" alt=""><span>Vinagrete</span>
+            </button>
+            <button type="button" class="item" data-item="Feijão" aria-pressed="false">
+              <img src="assets/icones/icone_feijao.png" alt=""><span>Feijão</span>
+            </button>
+          </div>
+          <p style="font-size:12px; margin-top:4px;">Quem leva o quê a gente acerta no grupo — ninguém precisa chegar com três panelas de arroz.</p>
+        </div>
+
+        <label class="campo" for="recado">
+          <span>Recado pro aniversariante (opcional)</span>
+          <textarea id="recado" maxlength="240" placeholder="Zoeira é bem-vinda."></textarea>
+        </label>
+
+        <div class="campo">
+          <span>Sua mensagem ficará assim</span>
+          <div id="resumo" aria-live="polite">Preenche aí em cima que eu monto sua mensagem.</div>
+        </div>
+
+        <button id="enviar" class="btn btn-plaque" type="button">Enviar no WhatsApp</button>
+        <button id="copiar" class="btn btn-ghost" type="button">📋 Copiar a mensagem</button>
+        <p id="aviso-zap" class="center" role="status" aria-live="polite"></p>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= PAINEL PRIVADO ========================= -->
+  <section id="painel" class="stack">
+    <div class="card stack">
+      <div class="stack" style="gap:4px;">
+        <div class="eyebrow">só pra você</div>
+        <h2>Painel do churrasco</h2>
+        <p style="font-size:13px;">Anote aqui quem foi confirmando no zap. Fica salvo só neste navegador.</p>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><div class="n" id="p-pessoas">0</div><div class="l">pessoas</div></div>
+        <div class="stat"><div class="n" id="p-chegaram">0</div><div class="l">chegaram</div></div>
+        <div class="stat"><div class="n" id="p-carne">0</div><div class="l">kg carne</div></div>
+      </div>
+
+      <div class="campo">
+        <span>Adicionar quem confirmou</span>
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="p-nome" placeholder="Nome (+1 se vier acompanhado)" maxlength="60">
+          <button id="p-add" class="btn" type="button" style="flex:none; padding-inline:16px;">+</button>
+        </div>
+      </div>
+
+      <div id="lista-convidados"></div>
+
+      <h3 style="margin-top:6px;">Lista de compras estimada</h3>
+      <div class="compras" id="compras"></div>
+      <p style="font-size:11.5px;">Base: 400g de carne, 1 pão de alho e ~1,5L de bebida por pessoa.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  feito com 🔥, pixel art e uma porta que não resistiu<br>
+  <a href="#painel" id="link-painel" aria-label="Abrir painel do organizador" title="painel do organizador">·</a>
+</footer>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   ⬇️⬇️⬇️  COLE AQUI O SEU NÚMERO DE WHATSAPP  ⬇️⬇️⬇️
+   Só dígitos: 55 (Brasil) + DDD + número.
+   Ex.: "5562999887766"
+   Enquanto estiver vazio, o botão copia a mensagem em vez de abrir o zap.
+   ============================================================ */
+var WHATSAPP = "";
+
+/* ---------------------- SOM (8-bit, mudo por padrão) ---------------------- */
+var ctx = null, mudo = true;
+var somBtn = document.getElementById('som');
+
+function garantirAudio(){
+  if(ctx) return;
+  try{ ctx = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){ ctx = null; }
+}
+function tom(o){
+  if(mudo || !ctx) return;
+  try{
+    var t = ctx.currentTime;
+    var osc = ctx.createOscillator(), g = ctx.createGain();
+    osc.type = o.tipo || 'square';
+    osc.frequency.setValueAtTime(o.freq, t);
+    if(o.ate) osc.frequency.exponentialRampToValueAtTime(o.ate, t + o.dur);
+    g.gain.setValueAtTime(o.vol || 0.12, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + o.dur);
+    osc.connect(g); g.connect(ctx.destination);
+    osc.start(t); osc.stop(t + o.dur);
+  }catch(e){}
+}
+function sfxBatida(){ tom({freq:210, dur:.09, vol:.16}); tom({freq:85, dur:.17, tipo:'sawtooth', vol:.12}); }
+function sfxEstrondo(){ tom({freq:150, dur:.38, tipo:'sawtooth', vol:.2, ate:32}); }
+function sfxOk(){
+  tom({freq:523, dur:.08, vol:.12});
+  setTimeout(function(){ tom({freq:659, dur:.09, vol:.12}); }, 85);
+  setTimeout(function(){ tom({freq:880, dur:.13, vol:.14}); }, 175);
+}
+function setMudo(v){
+  mudo = v;
+  somBtn.textContent = v ? '🔇' : '🔊';
+  somBtn.setAttribute('aria-pressed', String(!v));
+}
+somBtn.addEventListener('click', function(){ garantirAudio(); setMudo(!mudo); });
+function ligarSomNoPrimeiroToque(){ if(mudo){ garantirAudio(); setMudo(false); } }
+
+/* ---------------------- ATO 1: a porta ---------------------- */
+var TOTAL = 5, quebradas = 0, caiu = false;
+var palco = document.getElementById('palco');
+var porta = document.getElementById('porta');
+var fill = document.getElementById('integridade-fill');
+var pct  = document.getElementById('integridade-pct');
+var msg  = document.getElementById('porta-msg');
+var vfxImpacto = document.getElementById('vfx-impacto');
+var vfxPoeira  = document.getElementById('vfx-poeira');
+
+function tremer(){
+  palco.classList.remove('tremer');
+  void palco.offsetWidth;
+  palco.classList.add('tremer');
+}
+function tocarVfx(el, ms){
+  var base = el.src.split('?')[0];
+  el.style.opacity = '0';
+  el.src = base + '?t=' + Date.now();
+  requestAnimationFrame(function(){ el.style.opacity = '1'; });
+  setTimeout(function(){ el.style.opacity = '0'; }, ms);
+}
+function atualizarBarra(){
+  var p = Math.max(0, 100 - quebradas * 20);
+  fill.style.width = p + '%';
+  pct.textContent = p + '%';
+  fill.style.background = p > 60
+    ? 'linear-gradient(180deg,#9fe08a,#7fb86b)'
+    : (p > 25 ? 'linear-gradient(180deg,#f3d481,#e8b74c)'
+              : 'linear-gradient(180deg,#e08a7a,#c23b2f)');
+}
+
+Array.prototype.forEach.call(document.querySelectorAll('.barricada'), function(b){
+  b.addEventListener('click', function(){
+    if(b.classList.contains('quebrada') || caiu) return;
+    ligarSomNoPrimeiroToque();
+    b.classList.add('quebrada');
+    b.setAttribute('tabindex','-1');
+    quebradas++;
+    atualizarBarra();
+    tremer();
+    sfxBatida();
+    tocarVfx(vfxImpacto, 850);
+    msg.innerHTML = b.getAttribute('data-msg');
+    if(quebradas >= TOTAL) setTimeout(derrubarPorta, 520);
+  });
+});
+
+function derrubarPorta(){
+  if(caiu) return;
+  caiu = true;
+  porta.src = 'assets/porta/porta_rachando.png';
+  porta.alt = 'A porta rachando ao meio';
+  tremer(); sfxEstrondo();
+  msg.textContent = 'Essa porta não tá nada bem…';
+  setTimeout(function(){
+    porta.src = 'assets/porta/porta_caida.png';
+    porta.alt = 'A porta caída, virada em destroços';
+    tremer(); sfxEstrondo();
+    tocarVfx(vfxPoeira, 700);
+    msg.textContent = 'Pronto. Quebrei a porta também.';
+    setTimeout(abrirConvite, 1150);
+  }, 880);
+}
+
+document.getElementById('pular').addEventListener('click', function(){
+  ligarSomNoPrimeiroToque();
+  abrirConvite();
+});
+
+var convite = document.getElementById('convite');
+var conviteAberto = false;
+function abrirConvite(){
+  if(conviteAberto) return;
+  conviteAberto = true;
+  document.getElementById('ato-porta').hidden = true;
+  convite.hidden = false;
+  convite.classList.add('surgir');
+  iniciarIdle();
+  tocarVfx(document.getElementById('fumaca'), 900);
+  window.scrollTo({top:0, behavior:'auto'});
+}
+
+/* ---------------------- ATO 2: personagem ---------------------- */
+var BASE = 'assets/personagem/animacoes/';
+var POSES = {
+  idle:    {dir:'idle_respirando',               fps:5, loop:true},
+  aceno:   {dir:'aceno',                         fps:7, loop:false},
+  espeto:  {dir:'segurando_espeto',              fps:7, loop:false},
+  gravata: {dir:'ajustando_gravata',             fps:7, loop:false},
+  quebra:  {dir:'easter_egg_quebrando_espeto',   fps:7, loop:false}
+};
+var FRAMES = 5;
+var magnataImg = document.getElementById('magnata-img');
+var timer = null;
+
+// pré-carrega todos os frames pra não piscar na troca
+Object.keys(POSES).forEach(function(k){
+  for(var i=0;i<FRAMES;i++){ var im = new Image(); im.src = BASE + POSES[k].dir + '/frame_00' + i + '.png'; }
+});
+
+function tocarPose(nome){
+  var p = POSES[nome];
+  if(!p) return;
+  if(timer) clearInterval(timer);
+  var i = 0;
+  magnataImg.src = BASE + p.dir + '/frame_000.png';
+  timer = setInterval(function(){
+    i++;
+    if(i >= FRAMES){
+      if(p.loop){ i = 0; }
+      else { clearInterval(timer); iniciarIdle(); return; }
+    }
+    magnataImg.src = BASE + p.dir + '/frame_00' + i + '.png';
+  }, 1000 / p.fps);
+}
+function iniciarIdle(){ tocarPose('idle'); }
+
+var cutucadas = 0, cutucaTimer = null;
+var balao = document.getElementById('balao');
+var FALAS = [
+  'Opa! Calma, dessa vez eu não quebrei nada… na entrada, pelo menos.',
+  'Chegou cedo? A carne não.',
+  'Pode sentar. Mas naquela cadeira ali não.',
+  'Eu seguro o espeto. Confia.'
+];
+document.getElementById('magnata').addEventListener('click', function(){
+  ligarSomNoPrimeiroToque();
+  cutucadas++;
+  clearTimeout(cutucaTimer);
+  cutucaTimer = setTimeout(function(){ cutucadas = 0; }, 2500);
+
+  if(cutucadas >= 4){
+    cutucadas = 0;
+    tocarPose('quebra');
+    tom({freq:320, dur:.22, tipo:'triangle', vol:.16, ate:110});
+    balao.textContent = 'Eu juro que isso já tava quebrado.';
+    return;
+  }
+  var poses = ['aceno','espeto','gravata'];
+  tocarPose(poses[(cutucadas - 1) % poses.length]);
+  balao.textContent = FALAS[cutucadas % FALAS.length];
+});
+
+/* ---------------------- contagem regressiva ---------------------- */
+var EVENTO = new Date(2026, 10, 15, 13, 0, 0); // 15/11/2026 13:00 (mês é 0-indexado)
+var cd = document.getElementById('contagem');
+function pad(n){ return n < 10 ? '0' + n : String(n); }
+function renderContagem(){
+  var diff = EVENTO.getTime() - Date.now();
+  if(diff <= 0){
+    cd.innerHTML = '<div class="cd-box" style="grid-column:1/-1;"><div class="cd-num">É HOJE</div><div class="cd-unit">bora</div></div>';
+    return;
+  }
+  var d = Math.floor(diff / 864e5),
+      h = Math.floor(diff % 864e5 / 36e5),
+      m = Math.floor(diff % 36e5 / 6e4),
+      s = Math.floor(diff % 6e4 / 1000);
+  cd.innerHTML =
+    '<div class="cd-box"><div class="cd-num">' + d + '</div><div class="cd-unit">dias</div></div>' +
+    '<div class="cd-box"><div class="cd-num">' + pad(h) + '</div><div class="cd-unit">horas</div></div>' +
+    '<div class="cd-box"><div class="cd-num">' + pad(m) + '</div><div class="cd-unit">min</div></div>' +
+    '<div class="cd-box"><div class="cd-num">' + pad(s) + '</div><div class="cd-unit">seg</div></div>';
+}
+renderContagem();
+setInterval(renderContagem, 1000);
+
+document.getElementById('maps').href =
+  'https://www.google.com/maps/search/?api=1&query=' +
+  encodeURIComponent('Rua das Orquídeas, Condomínio Villaggio Jardins 3');
+
+/* ---------------------- confirmação / WhatsApp ---------------------- */
+var status = null;
+var escolhas = Array.prototype.slice.call(document.querySelectorAll('.escolha'));
+var blocoAcomp = document.getElementById('bloco-acompanhante');
+var blocoItens = document.getElementById('bloco-itens');
+var temAcomp = document.getElementById('tem-acompanhante');
+var campoAcomp = document.getElementById('campo-acompanhante');
+var resumo = document.getElementById('resumo');
+var aviso = document.getElementById('aviso-zap');
+
+escolhas.forEach(function(btn){
+  btn.addEventListener('click', function(){
+    status = btn.getAttribute('data-status');
+    escolhas.forEach(function(e){ e.setAttribute('aria-pressed', String(e === btn)); });
+    var vai = status !== 'nao';
+    blocoAcomp.hidden = !vai;
+    blocoItens.hidden = !vai;
+    montarResumo();
+  });
+});
+temAcomp.addEventListener('change', function(){
+  campoAcomp.hidden = !temAcomp.checked;
+  montarResumo();
+});
+Array.prototype.forEach.call(document.querySelectorAll('.item'), function(it){
+  it.addEventListener('click', function(){
+    var on = it.getAttribute('aria-pressed') === 'true';
+    it.setAttribute('aria-pressed', String(!on));
+    montarResumo();
+  });
+});
+['nome','nome-acompanhante','recado'].forEach(function(id){
+  document.getElementById(id).addEventListener('input', montarResumo);
+});
+['veg','bebe'].forEach(function(id){
+  document.getElementById(id).addEventListener('change', montarResumo);
+});
+
+function itensEscolhidos(){
+  return Array.prototype.slice.call(document.querySelectorAll('.item[aria-pressed="true"]'))
+    .map(function(i){ return i.getAttribute('data-item'); });
+}
+function valor(id){ return (document.getElementById(id).value || '').trim(); }
+
+function montarMensagem(){
+  var nome = valor('nome') || 'Alguém que esqueceu de dizer o nome';
+  var rotulo = {sim:'Bora! 🍖', talvez:'Talvez 🤔', nao:'Não vou 😢'}[status] || '';
+  var linhas = ['🍖 *Churrasco dos 25* — confirmação', '', '*Nome:* ' + nome, '*Vou?* ' + rotulo];
+
+  if(status !== 'nao'){
+    if(temAcomp.checked){
+      var na = valor('nome-acompanhante');
+      linhas.push('*Acompanhante:* ' + (na ? na : 'sim, +1'));
+    } else {
+      linhas.push('*Acompanhante:* vou sozinho(a)');
+    }
+    var extras = [];
+    if(document.getElementById('veg').checked) extras.push('vegetariano(a)');
+    if(document.getElementById('bebe').checked) extras.push('bebe álcool');
+    if(extras.length) linhas.push('*Obs:* ' + extras.join(', '));
+
+    var itens = itensEscolhidos();
+    if(itens.length) linhas.push('*Eu levo:* ' + itens.join(', '));
+  }
+
+  var rec = valor('recado');
+  if(rec) linhas.push('', '*Recado:* ' + rec);
+
+  return linhas.join('\n');
+}
+
+function montarResumo(){
+  if(!status){
+    resumo.textContent = 'Escolhe primeiro se você vai, talvez ou não vai.';
+    return;
+  }
+  resumo.textContent = montarMensagem().replace(/\*/g, '');
+}
+
+document.getElementById('enviar').addEventListener('click', function(){
+  if(!status){
+    aviso.style.color = 'var(--bad)';
+    aviso.textContent = 'Falta escolher: Bora, Talvez ou Não vou.';
+    document.querySelector('.escolhas').scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  if(!valor('nome')){
+    aviso.style.color = 'var(--bad)';
+    aviso.textContent = 'Coloca seu nome aí em cima, senão eu não sei quem é 😅';
+    document.getElementById('nome').focus();
+    return;
+  }
+  var texto = montarMensagem();
+  sfxOk();
+  if(WHATSAPP){
+    window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(texto), '_blank', 'noopener');
+    aviso.style.color = 'var(--ok)';
+    aviso.textContent = status === 'sim'
+      ? 'Abri o WhatsApp — é só mandar. Depois não encosta em nada meu. 😏'
+      : 'Abri o WhatsApp — é só mandar.';
+  } else {
+    copiar(texto, 'Número do zap ainda não configurado — copiei a mensagem, manda pro aniversariante.');
+  }
+});
+
+document.getElementById('copiar').addEventListener('click', function(){
+  if(!status){
+    aviso.style.color = 'var(--bad)';
+    aviso.textContent = 'Escolhe uma opção antes de copiar.';
+    return;
+  }
+  copiar(montarMensagem(), 'Copiado! Agora é só colar no WhatsApp. 📋');
+});
+
+function copiar(texto, okMsg){
+  function fallback(){
+    try{
+      var ta = document.createElement('textarea');
+      ta.value = texto;
+      ta.setAttribute('readonly','');
+      ta.style.position = 'fixed'; ta.style.top = '-1000px';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      aviso.style.color = 'var(--ok)';
+      aviso.textContent = okMsg;
+    }catch(e){
+      aviso.style.color = 'var(--warn)';
+      aviso.textContent = 'Não consegui copiar — seleciona o texto do resumo aí em cima.';
+    }
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(texto).then(function(){
+      aviso.style.color = 'var(--ok)';
+      aviso.textContent = okMsg;
+    }).catch(fallback);
+  } else {
+    fallback();
+  }
+}
+
+/* ---------------------- painel privado (#painel) ---------------------- */
+var CHAVE = 'churrasco25:convidados';
+var convidados = [];
+try{
+  var salvo = localStorage.getItem(CHAVE);
+  if(salvo) convidados = JSON.parse(salvo) || [];
+}catch(e){ convidados = []; }
+
+function salvar(){
+  try{ localStorage.setItem(CHAVE, JSON.stringify(convidados)); }catch(e){}
+}
+function renderPainel(){
+  var lista = document.getElementById('lista-convidados');
+  var pessoas = convidados.reduce(function(acc, c){ return acc + (c.extra ? 2 : 1); }, 0);
+  var chegaram = convidados.filter(function(c){ return c.chegou; }).length;
+
+  document.getElementById('p-pessoas').textContent = pessoas;
+  document.getElementById('p-chegaram').textContent = chegaram;
+  document.getElementById('p-carne').textContent = (pessoas * 0.4).toFixed(1).replace('.', ',');
+
+  lista.innerHTML = '';
+  if(!convidados.length){
+    var vazio = document.createElement('p');
+    vazio.style.fontSize = '13px';
+    vazio.textContent = 'Ninguém na lista ainda. Conforme o pessoal responder no zap, vai adicionando aqui.';
+    lista.appendChild(vazio);
+  }
+  convidados.forEach(function(c, idx){
+    var row = document.createElement('div');
+    row.className = 'convidado' + (c.chegou ? ' chegou' : '');
+
+    var cb = document.createElement('input');
+    cb.type = 'checkbox'; cb.checked = !!c.chegou;
+    cb.title = 'Marcar que chegou';
+    cb.addEventListener('change', function(){
+      convidados[idx].chegou = cb.checked; salvar(); renderPainel();
+    });
+
+    var nome = document.createElement('span');
+    nome.className = 'nome';
+    nome.textContent = c.nome + (c.extra ? ' (+1)' : '');
+
+    var del = document.createElement('button');
+    del.type = 'button';
+    del.setAttribute('aria-label', 'Remover ' + c.nome);
+    del.textContent = '×';
+    del.addEventListener('click', function(){
+      convidados.splice(idx, 1); salvar(); renderPainel();
+    });
+
+    row.appendChild(cb); row.appendChild(nome); row.appendChild(del);
+    lista.appendChild(row);
+  });
+
+  var compras = document.getElementById('compras');
+  var itens = [
+    ['Carne (400g/pessoa)', (pessoas * 0.4).toFixed(1).replace('.', ',') + ' kg'],
+    ['Pão de alho', Math.ceil(pessoas * 1.2) + ' un'],
+    ['Bebida (~1,5L/pessoa)', (pessoas * 1.5).toFixed(1).replace('.', ',') + ' L'],
+    ['Gelo', Math.ceil(pessoas / 4) + ' saco(s)'],
+    ['Carvão', Math.max(2, Math.ceil(pessoas / 3)) + ' kg']
+  ];
+  compras.innerHTML = '';
+  itens.forEach(function(it){
+    var d = document.createElement('div');
+    d.className = 'compra';
+    d.innerHTML = '<span>' + it[0] + '</span><b>' + it[1] + '</b>';
+    compras.appendChild(d);
+  });
+}
+
+document.getElementById('p-add').addEventListener('click', adicionar);
+document.getElementById('p-nome').addEventListener('keydown', function(ev){
+  if(ev.key === 'Enter'){ ev.preventDefault(); adicionar(); }
+});
+function adicionar(){
+  var input = document.getElementById('p-nome');
+  var txt = (input.value || '').trim();
+  if(!txt) return;
+  var extra = /\+\s*1|\(\+1\)/i.test(txt);
+  convidados.push({ nome: txt.replace(/\s*\(?\+\s*1\)?/i, '').trim() || txt, extra: extra, chegou: false });
+  input.value = '';
+  salvar();
+  renderPainel();
+}
+renderPainel();
+
+// o painel só aparece com #painel na URL
+function checarPainel(){
+  document.body.classList.toggle('painel-on', location.hash === '#painel');
+  if(location.hash === '#painel'){
+    abrirConvite();
+    setTimeout(function(){
+      document.getElementById('painel').scrollIntoView({behavior:'smooth', block:'start'});
+    }, 60);
+  }
+}
+window.addEventListener('hashchange', checarPainel);
+checarPainel();
+
+})();
+</script>
+</body>
+</html>
