@@ -220,8 +220,11 @@ small{color:var(--fg-dim);}
   line-height:0;
 }
 #quintal-bg{width:100%;}
+/* escala calibrada pela perspectiva do cenário: a mesa (75cm) ocupa ~55px
+   nativos, então ~1,4cm/px — uma pessoa em pé ao lado dela precisa de
+   ~120px de corpo, o que dá ~33% da largura da cena com este sprite */
 #magnata{
-  position:absolute; left:50%; bottom:4%; width:19%;
+  position:absolute; left:50%; bottom:2%; width:28%;
   transform:translateX(-50%);
   cursor:pointer; background:none; border:0; padding:0;
   filter:drop-shadow(0 4px 5px #000b);
@@ -230,11 +233,13 @@ small{color:var(--fg-dim);}
 }
 #magnata:hover{transform:translateX(-50%) scale(1.06);}
 #magnata:focus-visible{outline:3px solid var(--gold); outline-offset:3px;}
+/* sem isto a img fica no tamanho nativo (64px) e o width do botão não faz nada */
+#magnata img{width:100%; height:auto;}
 #fumaca{position:absolute; left:6%; top:14%; width:22%; opacity:0; pointer-events:none;}
 
 #balao{
   position:absolute; top:5%; left:50%; transform:translateX(-50%);
-  width:max-content; max-width:86%;
+  width:max-content; max-width:74%;
   background:var(--fg); color:#241610;
   font-weight:800; font-size:clamp(11px,3.1vw,13.5px); line-height:1.4;
   padding:9px 13px; border-radius:11px; box-shadow:0 3px 0 #0007;
@@ -260,9 +265,21 @@ small{color:var(--fg-dim);}
   font-size:9px; letter-spacing:.1em; color:var(--fg-dim); margin-top:3px;
 }
 
-.linha{display:flex; gap:12px; align-items:flex-start;}
-.linha .ico{font-size:19px; line-height:1.35; flex:none; width:24px; text-align:center;}
-.linha b{color:var(--fg);}
+/* ficha do evento: rótulo pequeno + valor, em vez de emoji como marcador */
+.ficha{display:grid; grid-template-columns:72px 1fr; gap:4px 14px; align-items:baseline;}
+.ficha dt{
+  font-size:10px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--accent); font-weight:800; padding-top:3px;
+}
+.ficha dd{margin:0; color:var(--fg); font-size:15.5px; line-height:1.45;}
+.ficha dd small{display:block; color:var(--fg-dim); font-size:13.5px;}
+.ficha .sep{grid-column:1/-1; height:1px; background:#ffffff12; margin:3px 0;}
+.nota-carne{
+  display:flex; gap:10px; align-items:center;
+  background:#ff7a3c14; border:1px solid #ff7a3c33; border-radius:10px;
+  padding:11px 13px; font-size:14.5px; color:var(--fg);
+}
+.nota-carne img{width:26px; height:26px; flex:none;}
 
 /* ============================================================
    CONFIRMAÇÃO
@@ -388,7 +405,7 @@ footer a{color:#a08977;}
   <div class="stack center">
     <div class="eyebrow">você foi convidado pra algo</div>
     <h1>Será que essa porta<br>aguenta?</h1>
-    <p>Tem coisa demais entupindo a entrada. Vai tirando — se você conseguir passar, tem churrasco do outro lado.</p>
+    <p>Tem coisa demais na frente da entrada. Vai tirando. Do outro lado tem churrasco.</p>
   </div>
 
   <div id="integridade">
@@ -445,7 +462,7 @@ footer a{color:#a08977;}
     <div id="quintal">
       <img id="quintal-bg" src="assets/cenario/quintal.png" alt="Quintal preparado pro churrasco: churrasqueira acesa, mesa posta, cooler e bandeirinhas ao pôr do sol">
       <img id="fumaca" src="assets/vfx/fumaca_puff.gif" alt="">
-      <div id="balao">Opa! Calma, dessa vez eu não quebrei nada… na entrada, pelo menos.</div>
+      <div id="balao">Opa, conseguiu entrar! A carne já tá no fogo.</div>
       <button id="magnata" type="button" aria-label="Cutucar o aniversariante">
         <img id="magnata-img" src="assets/personagem/animacoes/idle_respirando/frame_000.png" alt="O aniversariante, de terno e charuto, no quintal">
       </button>
@@ -455,17 +472,26 @@ footer a{color:#a08977;}
 
   <section class="card stack center">
     <div class="eyebrow">25 anos</div>
-    <h2>Um churrasco com risco estrutural</h2>
-    <p>Eu faço 25 e, como todo mundo sabe, tudo que eu toco quebra. Vem comer carne e torcer pra cadeira aguentar.</p>
+    <h2>Bora comer carne</h2>
+    <p>Vou comemorar meu aniversário e quero você lá.</p>
     <div id="contagem" aria-label="Contagem regressiva para o churrasco"></div>
   </section>
 
   <section class="card stack">
-    <div class="linha"><span class="ico">📅</span><div><b>Dia 15</b>, a partir das <b>13h</b></div></div>
-    <div class="linha"><span class="ico">📍</span><div><b>Rua das Orquídeas</b><br>Condomínio Villaggio Jardins 3</div></div>
-    <div class="linha"><span class="ico">🥩</span><div>A <b>carne é por minha conta</b>. O resto é onde você entra (veja abaixo).</div></div>
-    <div class="linha"><span class="ico">🍺</span><div>Traz sua bebida e, se puder, <b>gelo</b>.</div></div>
-    <a id="maps" class="btn" href="#" target="_blank" rel="noopener">🗺️ Abrir no Maps</a>
+    <dl class="ficha">
+      <dt>Quando</dt>
+      <dd>Dia 15, a partir das 13h</dd>
+      <div class="sep"></div>
+      <dt>Onde</dt>
+      <dd>Rua das Orquídeas<small>Condomínio Villaggio Jardins 3</small></dd>
+      <div class="sep"></div>
+      <dt>Leva</dt>
+      <dd>Sua bebida<small>e gelo, se puder</small></dd>
+    </dl>
+    <div class="nota-carne">
+      <span>A <b>carne é por minha conta</b>. Pode vir de mãos abanando.</span>
+    </div>
+    <a id="maps" class="btn" href="#" target="_blank" rel="noopener">Abrir no Maps</a>
   </section>
 
   <!-- ========================= CONFIRMAÇÃO ========================= -->
@@ -473,7 +499,7 @@ footer a{color:#a08977;}
     <div class="center stack" style="gap:6px;">
       <div class="eyebrow">lista oficial</div>
       <h2>Você vai?</h2>
-      <p>Preciso saber quanta carne comprar — e se você vem acompanhado.</p>
+      <p>Preciso saber quanta carne comprar.</p>
     </div>
 
     <div class="moldura">
@@ -514,7 +540,7 @@ footer a{color:#a08977;}
 
         <div id="bloco-itens" class="campo" hidden>
           <span>Posso contar com você pra levar algo?</span>
-          <p style="font-size:12.5px; margin-bottom:2px;">Eu já quebrei liquidificador, fogão e um pedaço da minha dignidade tentando fazer arroz. Salva o churrasco:</p>
+          <p style="font-size:12.5px; margin-bottom:2px;">Arroz eu não sei fazer. Se puder trazer algo, marca aí:</p>
           <div class="itens" role="group" aria-label="O que você leva">
             <button type="button" class="item" data-item="Arroz" aria-pressed="false">
               <img src="assets/icones/icone_arroz.png" alt=""><span>Arroz</span>
@@ -540,7 +566,7 @@ footer a{color:#a08977;}
         </div>
 
         <button id="enviar" class="btn btn-plaque" type="button">Enviar no WhatsApp</button>
-        <button id="copiar" class="btn btn-ghost" type="button">📋 Copiar a mensagem</button>
+        <button id="copiar" class="btn btn-ghost" type="button">Copiar a mensagem</button>
         <p id="aviso-zap" class="center" role="status" aria-live="polite"></p>
 
       </div>
@@ -581,7 +607,7 @@ footer a{color:#a08977;}
 </main>
 
 <footer>
-  feito com 🔥, pixel art e uma porta que não resistiu<br>
+  pixel art feita à mão · a porta não resistiu<br>
   <a href="#painel" id="link-painel" aria-label="Abrir painel do organizador" title="painel do organizador">·</a>
 </footer>
 
