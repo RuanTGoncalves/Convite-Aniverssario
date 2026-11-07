@@ -6,6 +6,8 @@
 <title>A Porta Remendada — Churrasco de 25 anos</title>
 <meta name="description" content="Convite para o churrasco de 25 anos. Quebre a porta, confirme presença e escolha o que vai levar.">
 <meta name="theme-color" content="#140d0a">
+<!-- endereço residencial numa URL pública: fora dos buscadores -->
+<meta name="robots" content="noindex, nofollow">
 <meta property="og:title" content="A Porta Remendada">
 <meta property="og:description" content="Churrasco de 25 anos — dia 15, 13h. Se a porta aguentar.">
 <meta property="og:type" content="website">
@@ -116,8 +118,20 @@ small{color:var(--fg-dim);}
 }
 .btn-ghost{
   background:#ffffff0a; border-color:#ffffff22; box-shadow:none;
-  color:var(--fg-dim); font-size:13px; padding:10px 14px; min-height:40px;
+  color:var(--fg-dim); font-size:13px; padding:11px 14px; min-height:44px;
 }
+/* link discreto pro painel: visualmente um ponto, mas com alvo de toque real */
+#link-painel{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:44px; height:44px; text-decoration:none; font-size:18px; line-height:1;
+}
+#link-painel:focus-visible{outline:2px solid var(--gold); outline-offset:2px; border-radius:50%;}
+.skip-link{
+  position:absolute; left:-9999px; top:0; z-index:100;
+  background:var(--gold); color:#1a1109; font-weight:800;
+  padding:12px 18px; border-radius:0 0 10px 0; text-decoration:none;
+}
+.skip-link:focus{left:0;}
 /* placa de madeira gerada, usada só onde a proporção bate (2:1) */
 .btn-plaque{
   background:url("assets/ui/botao_rsvp.png") center/100% 100% no-repeat;
@@ -398,12 +412,13 @@ footer a{color:#a08977;}
 </head>
 <body>
 
+<a class="skip-link" href="#convite">Pular para o convite</a>
 <button id="som" class="btn" type="button" aria-label="Ligar ou desligar o som" aria-pressed="false">🔇</button>
 
 <!-- ========================= ATO 1 — A PORTA ========================= -->
 <section id="ato-porta" class="wrap">
   <div class="stack center">
-    <div class="eyebrow">você foi convidado pra algo</div>
+    <div class="eyebrow">churrasco de 25 anos · dia 15, 13h</div>
     <h1>Será que essa porta<br>aguenta?</h1>
     <p>Tem coisa demais na frente da entrada. Vai tirando. Do outro lado tem churrasco.</p>
   </div>
@@ -552,7 +567,7 @@ footer a{color:#a08977;}
               <img src="assets/icones/icone_feijao.png" alt=""><span>Feijão</span>
             </button>
           </div>
-          <p style="font-size:12px; margin-top:4px;">Quem leva o quê a gente acerta no grupo — ninguém precisa chegar com três panelas de arroz.</p>
+          <p style="font-size:12px; margin-top:4px;">Quem leva o quê a gente acerta no grupo. Ninguém precisa chegar com três panelas de arroz.</p>
         </div>
 
         <label class="campo" for="recado">
