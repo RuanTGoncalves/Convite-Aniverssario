@@ -175,7 +175,7 @@ small{color:var(--fg-dim);}
   touch-action:manipulation;
 }
 #porta{
-  width:62%; grid-area:1/1; z-index:1;
+  width:74%; grid-area:1/1; z-index:1;
   filter:drop-shadow(0 12px 16px #000a);
   transition:opacity .2s ease;
 }
@@ -192,11 +192,13 @@ small{color:var(--fg-dim);}
 .barricada:focus-visible{outline:3px solid var(--gold); outline-offset:4px; border-radius:6px;}
 .barricada.quebrada{opacity:0; transform:scale(.35) rotate(calc(var(--r) + 30deg)); pointer-events:none;}
 
-#b-supino {top:-2%;  left:-4%;  width:56%; --r:-7deg;  transform:rotate(-7deg);}
-#b-cone   {top:4%;   right:-5%; width:45%; --r:9deg;   transform:rotate(9deg);}
-#b-fita   {top:34%;  left:9%;   width:76%; --r:-2deg;  transform:rotate(-2deg); z-index:6;}
-#b-tabuas {bottom:8%; left:-7%; width:54%; --r:6deg;   transform:rotate(6deg);}
-#b-cadeado{bottom:1%; right:-3%;width:43%; --r:-8deg;  transform:rotate(-8deg);}
+/* tudo encostado/pregado na MESMA porta: ela aparece inteira por baixo
+   e vai sendo liberada conforme cada objeto sai */
+#b-fita   {top:13%; left:24%;  width:52%; --r:-3deg; transform:rotate(-3deg);  z-index:6;}
+#b-tabuas {top:36%; left:21%;  width:58%; --r:2deg;  transform:rotate(2deg);   z-index:7;}
+#b-cadeado{top:49%; right:12%; width:25%; --r:-6deg; transform:rotate(-6deg);  z-index:8;}
+#b-supino {bottom:6%; left:-2%; width:48%; --r:-9deg; transform:rotate(-9deg); z-index:9;}
+#b-cone   {bottom:2%; right:4%; width:30%; --r:4deg;  transform:rotate(4deg);  z-index:9;}
 
 #vfx-camada{position:absolute; inset:0; pointer-events:none; z-index:9; display:grid; place-items:center;}
 #vfx-camada img{grid-area:1/1; opacity:0; transition:opacity .12s linear;}
@@ -356,6 +358,17 @@ textarea{min-height:76px; resize:vertical;}
 }
 .item[aria-pressed="true"] span{color:var(--fg);}
 
+.passos{display:flex; flex-direction:column; gap:10px;}
+.passo{display:flex; gap:11px; align-items:flex-start; margin-top:4px;}
+.passo .num{
+  flex:none; width:25px; height:25px; border-radius:50%;
+  background:var(--accent); color:#2a1206;
+  font-weight:900; font-size:14px;
+  display:flex; align-items:center; justify-content:center;
+}
+.passo b{display:block; font-size:14.5px; color:var(--fg); line-height:1.35;}
+.passo small{display:block; color:var(--fg-dim); font-size:12.5px; line-height:1.4; margin-top:2px;}
+
 #resumo{
   background:#15100d; border:1px dashed var(--wood); border-radius:10px;
   padding:13px; font-size:13.5px; line-height:1.65; color:var(--fg-dim);
@@ -440,8 +453,8 @@ footer a{color:#a08977;}
       <img src="assets/barricadas/barricada_supino.png" alt="">
     </button>
     <button class="barricada" id="b-cone" type="button"
-            data-msg="Até o paciente fugiu dessa porta."
-            aria-label="Tirar o cone de cachorro da frente da porta">
+            data-msg="Esse aí é paciente meu. Tá de boa, só não sai da frente."
+            aria-label="Tirar o cachorro de cone da frente da porta">
       <img src="assets/barricadas/barricada_cone.png" alt="">
     </button>
     <button class="barricada" id="b-fita" type="button"
@@ -501,7 +514,7 @@ footer a{color:#a08977;}
       <dd>Rua das Orquídeas<small>Condomínio Villaggio Jardins 3</small></dd>
       <div class="sep"></div>
       <dt>Leva</dt>
-      <dd>Sua bebida<small>e gelo, se puder</small></dd>
+      <dd>Sua bebida alcoólica<small>se for beber. O resto é comigo</small></dd>
     </dl>
     <div class="nota-carne">
       <span>A <b>carne é por minha conta</b>. Pode vir de mãos abanando.</span>
@@ -553,23 +566,6 @@ footer a{color:#a08977;}
           <label class="check"><input type="checkbox" id="bebe"> Vou beber álcool</label>
         </div>
 
-        <div id="bloco-itens" class="campo" hidden>
-          <span>Posso contar com você pra levar algo?</span>
-          <p style="font-size:12.5px; margin-bottom:2px;">Arroz eu não sei fazer. Se puder trazer algo, marca aí:</p>
-          <div class="itens" role="group" aria-label="O que você leva">
-            <button type="button" class="item" data-item="Arroz" aria-pressed="false">
-              <img src="assets/icones/icone_arroz.png" alt=""><span>Arroz</span>
-            </button>
-            <button type="button" class="item" data-item="Vinagrete" aria-pressed="false">
-              <img src="assets/icones/icone_vinagrete.png" alt=""><span>Vinagrete</span>
-            </button>
-            <button type="button" class="item" data-item="Feijão" aria-pressed="false">
-              <img src="assets/icones/icone_feijao.png" alt=""><span>Feijão</span>
-            </button>
-          </div>
-          <p style="font-size:12px; margin-top:4px;">Quem leva o quê a gente acerta no grupo. Ninguém precisa chegar com três panelas de arroz.</p>
-        </div>
-
         <label class="campo" for="recado">
           <span>Recado pro aniversariante (opcional)</span>
           <textarea id="recado" maxlength="240" placeholder="Zoeira é bem-vinda."></textarea>
@@ -580,8 +576,25 @@ footer a{color:#a08977;}
           <div id="resumo" aria-live="polite">Preenche aí em cima que eu monto sua mensagem.</div>
         </div>
 
-        <button id="enviar" class="btn btn-plaque" type="button">Enviar no WhatsApp</button>
-        <button id="copiar" class="btn btn-ghost" type="button">Copiar a mensagem</button>
+        <div class="passos">
+          <div class="passo">
+            <span class="num">1</span>
+            <div>
+              <b>Copie sua confirmação</b>
+              <small>o texto que aparece aí em cima</small>
+            </div>
+          </div>
+          <button id="copiar" class="btn btn-plaque" type="button">Copiar confirmação</button>
+
+          <div class="passo">
+            <span class="num">2</span>
+            <div>
+              <b>Entre no grupo e cole lá</b>
+              <small>é no grupo que eu organizo tudo: carne, horário e mudança de planos</small>
+            </div>
+          </div>
+          <a id="grupo" class="btn btn-primary" href="https://chat.whatsapp.com/HcoQIyc8Am85yQP3G7pUfu?s=cl&amp;p=i&amp;mlu=4&amp;ilr=4&amp;iam=2" target="_blank" rel="noopener">Entrar no grupo do churrasco</a>
+        </div>
         <p id="aviso-zap" class="center" role="status" aria-live="polite"></p>
 
       </div>
@@ -629,14 +642,6 @@ footer a{color:#a08977;}
 <script>
 (function(){
 "use strict";
-
-/* ============================================================
-   ⬇️⬇️⬇️  COLE AQUI O SEU NÚMERO DE WHATSAPP  ⬇️⬇️⬇️
-   Só dígitos: 55 (Brasil) + DDD + número.
-   Ex.: "5562999887766"
-   Enquanto estiver vazio, o botão copia a mensagem em vez de abrir o zap.
-   ============================================================ */
-var WHATSAPP = "";
 
 /* ---------------------- SOM (8-bit, mudo por padrão) ---------------------- */
 var ctx = null, mudo = true;
@@ -850,7 +855,6 @@ document.getElementById('maps').href =
 var status = null;
 var escolhas = Array.prototype.slice.call(document.querySelectorAll('.escolha'));
 var blocoAcomp = document.getElementById('bloco-acompanhante');
-var blocoItens = document.getElementById('bloco-itens');
 var temAcomp = document.getElementById('tem-acompanhante');
 var campoAcomp = document.getElementById('campo-acompanhante');
 var resumo = document.getElementById('resumo');
@@ -860,22 +864,13 @@ escolhas.forEach(function(btn){
   btn.addEventListener('click', function(){
     status = btn.getAttribute('data-status');
     escolhas.forEach(function(e){ e.setAttribute('aria-pressed', String(e === btn)); });
-    var vai = status !== 'nao';
-    blocoAcomp.hidden = !vai;
-    blocoItens.hidden = !vai;
+    blocoAcomp.hidden = (status === 'nao');
     montarResumo();
   });
 });
 temAcomp.addEventListener('change', function(){
   campoAcomp.hidden = !temAcomp.checked;
   montarResumo();
-});
-Array.prototype.forEach.call(document.querySelectorAll('.item'), function(it){
-  it.addEventListener('click', function(){
-    var on = it.getAttribute('aria-pressed') === 'true';
-    it.setAttribute('aria-pressed', String(!on));
-    montarResumo();
-  });
 });
 ['nome','nome-acompanhante','recado'].forEach(function(id){
   document.getElementById(id).addEventListener('input', montarResumo);
@@ -884,10 +879,6 @@ Array.prototype.forEach.call(document.querySelectorAll('.item'), function(it){
   document.getElementById(id).addEventListener('change', montarResumo);
 });
 
-function itensEscolhidos(){
-  return Array.prototype.slice.call(document.querySelectorAll('.item[aria-pressed="true"]'))
-    .map(function(i){ return i.getAttribute('data-item'); });
-}
 function valor(id){ return (document.getElementById(id).value || '').trim(); }
 
 function montarMensagem(){
@@ -904,11 +895,8 @@ function montarMensagem(){
     }
     var extras = [];
     if(document.getElementById('veg').checked) extras.push('vegetariano(a)');
-    if(document.getElementById('bebe').checked) extras.push('bebe álcool');
+    if(document.getElementById('bebe').checked) extras.push('vou levar bebida');
     if(extras.length) linhas.push('*Obs:* ' + extras.join(', '));
-
-    var itens = itensEscolhidos();
-    if(itens.length) linhas.push('*Eu levo:* ' + itens.join(', '));
   }
 
   var rec = valor('recado');
@@ -925,7 +913,7 @@ function montarResumo(){
   resumo.textContent = montarMensagem().replace(/\*/g, '');
 }
 
-document.getElementById('enviar').addEventListener('click', function(){
+document.getElementById('copiar').addEventListener('click', function(){
   if(!status){
     aviso.style.color = 'var(--bad)';
     aviso.textContent = 'Falta escolher: Bora, Talvez ou Não vou.';
@@ -934,30 +922,18 @@ document.getElementById('enviar').addEventListener('click', function(){
   }
   if(!valor('nome')){
     aviso.style.color = 'var(--bad)';
-    aviso.textContent = 'Coloca seu nome aí em cima, senão eu não sei quem é 😅';
+    aviso.textContent = 'Coloca seu nome aí em cima, senão eu não sei quem é.';
     document.getElementById('nome').focus();
     return;
   }
-  var texto = montarMensagem();
   sfxOk();
-  if(WHATSAPP){
-    window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(texto), '_blank', 'noopener');
-    aviso.style.color = 'var(--ok)';
-    aviso.textContent = status === 'sim'
-      ? 'Abri o WhatsApp — é só mandar. Depois não encosta em nada meu. 😏'
-      : 'Abri o WhatsApp — é só mandar.';
-  } else {
-    copiar(texto, 'Número do zap ainda não configurado — copiei a mensagem, manda pro aniversariante.');
-  }
+  copiar(montarMensagem(), 'Copiado. Agora entra no grupo e cola lá.');
 });
 
-document.getElementById('copiar').addEventListener('click', function(){
-  if(!status){
-    aviso.style.color = 'var(--bad)';
-    aviso.textContent = 'Escolhe uma opção antes de copiar.';
-    return;
-  }
-  copiar(montarMensagem(), 'Copiado! Agora é só colar no WhatsApp. 📋');
+document.getElementById('grupo').addEventListener('click', function(){
+  if(status && valor('nome')) return;
+  aviso.style.color = 'var(--warn)';
+  aviso.textContent = 'Dica: preenche e copia a confirmação antes, pra já colar no grupo.';
 });
 
 function copiar(texto, okMsg){

@@ -71,6 +71,36 @@ Ordem sugerida, cada item aprovado antes de seguir pro próximo:
 - [x] Moldura e placa de madeira com `border-image` fatiado (não deforma o pixel art)
 - [x] Fonte pixel aplicada só em números/rótulos ASCII (ela não tem acentos)
 
+## Fase 8 — Ajustes pós-publicação 🔧
+
+### 8.1 A porta: uma só, sendo desobstruída ✅
+**Problema:** cada barricada foi gerada com "blocking a doorway", então cada PNG tinha a
+própria moldura de porta embutida. Empilhadas, liam-se como cinco portas.
+
+- [x] Regerados os 5 objetos **isolados** via `create_image_pixflux` (1 geração cada,
+      5 no total, contra 50 pelo caminho de objeto)
+- [x] Recomposta a cena: fita e tábuas pregadas na porta, cadeado na lateral,
+      halter encostado na base, cachorro de cone sentado na frente
+- [x] A porta agora aparece inteira por baixo e vai sendo liberada
+- [x] O cone virou um cachorro usando o cone — melhor pra piada da veterinária
+
+### 8.2 Acompanhamentos saem ✅
+- [x] Removidos os 3 cards e a pasta `assets/icones/`
+- [x] O que levar virou só: **bebida alcoólica, se for beber**
+
+### 8.3 Confirmação passa pelo grupo ✅
+**Restrição:** link de grupo (`chat.whatsapp.com`) não aceita `?text=` pré-preenchido —
+só `wa.me` aceita. Por isso o fluxo virou dois passos.
+
+- [x] Passo 1: "Copiar confirmação" (a página monta a mensagem)
+- [x] Passo 2: "Entrar no grupo do churrasco" com o link do grupo
+- [x] Formulário mantido, alimentando a mensagem que se cola no grupo
+- [x] Constante `WHATSAPP` removida (não é mais usada)
+
+### 8.4 Fechamento ✅
+- [x] Testado em 320/375px, console limpo
+- [x] Publicado
+
 ## Fase 7 — Envio 🚀
 - [x] Publicado no GitHub Pages: **https://ruantgoncalves.github.io/Convite-Aniverssario/**
 - [x] Repositório: https://github.com/RuanTGoncalves/Convite-Aniverssario (fotos pessoais ficaram fora via `.gitignore`)
