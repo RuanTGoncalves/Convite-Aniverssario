@@ -31,6 +31,21 @@ Acesse a URL do site com `#painel` no final. A lista fica salva no `localStorage
 do seu navegador (só sua, não é compartilhada) e calcula carne, pão de alho,
 bebida, gelo e carvão a partir do número de pessoas.
 
+## Foto de perfil do grupo
+
+`avatar/avatar-grupo.png` — 640×640, o tamanho recomendado pelo WhatsApp.
+O texto foi posicionado dentro da área que sobrevive ao recorte circular.
+
+Para mudar os dizeres, edite as chamadas de `centralizar()` em
+`avatar/montar_avatar.py` e rode da raiz do projeto:
+
+```bash
+python avatar/montar_avatar.py
+```
+
+Ele confere sozinho se o texto cabe no círculo. A fonte pixel não tem
+acentos — use só letras sem acento.
+
 ## Estrutura
 
 ```
